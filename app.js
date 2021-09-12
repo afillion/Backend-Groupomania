@@ -2,13 +2,9 @@
 const express = require('express');
 const db = require('./models/');
 
-// MODELS
-// const User = require('./models/user');
-// const Sauce = require('./models/sauce');
-
 // ROUTES
-// const userRoutes = require('./routes/user');
-// const sauceRoutes = require('./routes/sauce');
+const usersRoutes = require('./routes/users');
+const postsRoutes = require('./routes/posts');
 
 const app = express();
 
@@ -51,8 +47,8 @@ app.use((req, res, next) => {
   next();
 }); //response define header for all routes and methods(GET POST PUT DELETE..)
 
-// app.use('/api/sauces', sauceRoutes);
-// app.use('/api/auth', userRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {
   res.status(200);
