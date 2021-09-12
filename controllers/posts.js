@@ -14,7 +14,7 @@ exports.new = (req, res, next) => {
       post: post
     } );
   }).catch( err => {
-    res.status(500).json( { message: "Cannot create post !" } );
+    res.status(500).json( { error: err, message: "Cannot create post !" } );
   });
 };
 
