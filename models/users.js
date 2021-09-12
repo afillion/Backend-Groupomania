@@ -2,6 +2,7 @@ module.exports = (sequelize, Sequelize) => {
   const Users = sequelize.define("users", {
     pseudo: {
       type: Sequelize.STRING(10),
+      unique: true
     },
     pwd: {
       type: Sequelize.STRING
