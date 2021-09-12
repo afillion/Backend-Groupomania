@@ -7,7 +7,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT
     },
     userId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      allowNull: false
     },
     usersLiked: {
       type: Sequelize.JSON //NO ARRAY TYPE FOR MYSQL IN SEQUELIZE
@@ -23,9 +24,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     imageUrl: {
       type: Sequelize.STRING,
-      validate: {
-        isUrl: true
-      }
+      // validate: {
+      //   isUrl: true
+      // } Reactivate this for build. Unable in dev mode due to localhost:3000 rejected by isUrl method
     }
   });
 
