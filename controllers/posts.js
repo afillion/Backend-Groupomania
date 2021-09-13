@@ -1,7 +1,10 @@
 const db = require('../models');
 const Posts = db.posts;
+const Userslike = db.userslike;
+const Usersdislike = db.usersdislike;
 const jwt = require('jsonwebtoken');
 const fs = require('fs'); //for File System. Give access for file system functions
+const { throws } = require('assert');
 
 exports.new = (req, res, next) => {
   console.log("posts create Ctrl");
@@ -61,66 +64,64 @@ exports.deleteOne = (req, res, next) => {
   });
 };
 
+var user_isLiked = false;
+var user_isDisliked = false;
 exports.like = (req, res, next) => {
-  console.log(req.params);
-  Posts.findOne( { where: { id: req.params.id }})
-  .then( (post) => {
-    // var actualLike = post.usersLiked.find( user => {
-    //   console.log(user);
-    //   return user == req.body.userId;
-    // });
-    // var actualDislike = post.usersDisliked.find( user => {
-    //   console.log(user);
-    //   return user == req.body.userId;
-    // });
-    if (req.body.like > 0) {
-      post.likes++;
-      if (post.usersLiked.length === 0) {
-        post.usersLiked += req.body.userId;
-      }
-      else {
-        post.usersLiked += " ," + req.body.userId;
-      }
+  console.log("\n", req.params, "\n");
+  console.log("\n req.body: \n");
+  console.log(req.body.userId);
+  console.log(req.body.postId);
+
+  console.log(this);
+
+
+
+  Userslike.findOne({ where: { userId: req.body.userId, postId: req.params.id }})
+  .then( item => {
+    if (item) {
+       this.user_isLiked = true;
     }
-    else if (req.body.like < 0) {
-      post.dislikes++;
-      if (post.usersDisliked.length === 0) {
-        post.usersDisliked += req.body.userId;
-      }
-      else {
-        post.usersDisliked += " ," + req.body.userId;
-      }    }
-    // else if (req.body.like == 0) {
-    //   if (actualLike !== undefined) {
-    //     post.usersLiked.splice(post.usersLiked.indexOf(req.body.userId), 1);
-    //     post.likes--;
-    //   }
-    //   if (actualDislike !== undefined) {
-    //     post.usersDisliked.splice(post.usersDisliked.indexOf(req.body.userId), 1);
-    //     post.dislikes--;
-    //   }
-    // }
-
-    // console.log(array_like);
-    // console.log(JSON.parse(array_like));
-    // console.log(JSON.stringify(array_like));
-    // console.log(JSON.parse(JSON.stringify(array_like)));
-
-    post.update(
-      {
-        usersLiked: post.usersLiked,
-        usersDisliked: post.usersDisliked,
-        likes: post.likes,
-        dislikes: post.dislikes
-      },
-      { where: { id: req.params.id } }
-    )
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-    .catch(error => res.status(400).json({ error }));
+    return;
   })
-  .catch( error => {
-    res.status(404).json({ error });
+  .catch( err => {
+    res.status(500).json({ error: err});
   });
+  Usersdislike.findOne({ where: { userId: req.body.userId, postId: req.params.id }})
+  .then( item => {
+    if (item) {
+      var user_isDisliked = true;
+    }
+    return;
+  })
+  .catch( err => {
+    res.status(500).json({ error: err });
+  });
+
+  if (req.body.like > 0) {
+    Userslike.create({
+      postId: req.params.id,
+      userId: req.body.userId
+    }).then( item => {
+
+    })
+    .catch( err => {
+      res.status(500).json({ error: err });
+    });
+  }
+  else if (req.body.like < 0) {
+    Usersdislike.create({
+      postId: req.params.id,
+      userId: req.body.userId
+    }).then( item => {
+
+    })
+    .catch( err => {
+      res.status(500).json({ error: err });
+    })
+  }
+
+  console.log("user_isLiked ? ", user_isLiked);
+  console.log("user_isDisliked ? ", user_isDisliked);
 };
 
 exports.getOne = (req, res, next) => {

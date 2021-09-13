@@ -10,12 +10,12 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false
     },
-    usersLiked: {
-      type: Sequelize.STRING //NO ARRAY TYPE FOR MYSQL IN SEQUELIZE
-    },
-    usersDisliked: {
-      type: Sequelize.STRING
-    },
+    // usersLiked: {
+    //   type: Sequelize.STRING //NO ARRAY TYPE FOR MYSQL IN SEQUELIZE
+    // },
+    // usersDisliked: {
+    //   type: Sequelize.STRING
+    // },
     likes: {
       type: Sequelize.INTEGER
     },
