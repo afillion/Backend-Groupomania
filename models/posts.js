@@ -11,10 +11,10 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     usersLiked: {
-      type: Sequelize.JSON //NO ARRAY TYPE FOR MYSQL IN SEQUELIZE
+      type: Sequelize.STRING //NO ARRAY TYPE FOR MYSQL IN SEQUELIZE
     },
     usersDisliked: {
-      type: Sequelize.JSON
+      type: Sequelize.STRING
     },
     likes: {
       type: Sequelize.INTEGER

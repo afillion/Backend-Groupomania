@@ -23,7 +23,6 @@ exports.login = (req, res, next) => {
   console.log(req.body);
   Users.findOne( {where :{ email: req.body.user.email }})
     .then(user => {
-      console.log(user);
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' }); //401:NO AUTHORIZED
       }
@@ -44,6 +43,16 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(500).json({ error: error }));
     })
     .catch(error => res.status(404).json({ error: error }));
+};
+
+exports.getOne = (req, res, next) => {
+  Users.findOne( {where :{ id: req.params.id }})
+  .then( user => {
+    res.status(200).json(user);
+  })
+  .catch( err => {
+    res.status(404).json({ error: err });
+  });
 };
 
 exports.getAll = (req, res, next) => {

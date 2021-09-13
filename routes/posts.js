@@ -6,12 +6,11 @@ const multer = require('../middlewares/multer-config');
 const postsCtrl = require('../controllers/posts');
 
 router.get('', auth, postsCtrl.getAll);
+router.get('/:id', auth, postsCtrl.getOne);
 router.post('', auth, postsCtrl.new);
-// router.get('/:id', auth, sauceCtrl.getOne);
-// router.post('', auth, multer, sauceCtrl.new);
-// router.put('/:id', auth, multer, sauceCtrl.modifOne);
-// router.delete('/:id', auth, sauceCtrl.delOne);
-// router.post('/:id/like', auth, sauceCtrl.like);
+router.put('/:id', postsCtrl.modifOne);
+router.delete('/:id', postsCtrl.deleteOne);
+router.post('/:id/like', postsCtrl.like);
 
 module.exports = router;
 // Define routes for each path. See methods in controllers/
