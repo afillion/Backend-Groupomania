@@ -4,7 +4,6 @@ const Userslike = db.userslike;
 const Usersdislike = db.usersdislike;
 const jwt = require('jsonwebtoken');
 const fs = require('fs'); //for File System. Give access for file system functions
-const { throws } = require('assert');
 
 exports.new = (req, res, next) => {
   console.log("posts create Ctrl");
@@ -64,64 +63,122 @@ exports.deleteOne = (req, res, next) => {
   });
 };
 
-var user_isLiked = false;
-var user_isDisliked = false;
-exports.like = (req, res, next) => {
+exports.test = function test() {
+  console.log(this);
+}
+
+exports.user_isLiked = false;
+exports.user_isDisliked = false;
+
+exports.like = async (req, res, next) => {
   console.log("\n", req.params, "\n");
   console.log("\n req.body: \n");
   console.log(req.body.userId);
   console.log(req.body.postId);
+  this.user_isLiked = false;
+  this.user_isDisliked = false;
 
-  console.log(this);
-
-
-
-  Userslike.findOne({ where: { userId: req.body.userId, postId: req.params.id }})
+  await Userslike.findOne({ where: { userId: req.body.userId, postId: req.params.id }})
   .then( item => {
+    console.log("test");
     if (item) {
-       this.user_isLiked = true;
+      this.user_isLiked = true;
+      console.log(this.user_isLiked);
     }
-    return;
   })
-  .catch( err => {
-    res.status(500).json({ error: err});
-  });
-  Usersdislike.findOne({ where: { userId: req.body.userId, postId: req.params.id }})
+  .catch( err => { res.status(500).json({ error: err, message: "1"}); });
+  await Usersdislike.findOne({ where: { userId: req.body.userId, postId: req.params.id }})
   .then( item => {
+    console.log("test");
     if (item) {
-      var user_isDisliked = true;
+      this.user_isDisliked = true;
+      console.log(this.user_isDisliked);
     }
-    return;
   })
-  .catch( err => {
-    res.status(500).json({ error: err });
-  });
-
+  .catch( err => { res.status(500).json({ error: err, message: "2" }); });
+  
   if (req.body.like > 0) {
-    Userslike.create({
+    console.log("in if statement : user_isLiked: ", this.user_isLiked);
+    if (this.user_isLiked === true) {
+      res.status(401).json({ message: "You already likes this post !" });
+      return;
+    }
+    else if (this.user_isDisliked === true) {
+      await Usersdislike.destroy({ where: { userId: req.body.userId, postId: req.params.id }})
+      .catch( err => { res.status(500).json({ error: err }); });
+      await Posts.findOne({ where: { id: req.params.id }})
+      .then( async oldpost => {
+        console.log(oldpost);
+        await oldpost.update(
+          {
+            dislikes: oldpost.dislikes - 1
+          },
+          {where: {id: req.params.id}}
+        )
+        .catch( err => { res.status(500).json({ error: err }); });
+      })
+      .catch( err => { res.status(500).json({ error: err }); });
+    }
+    await Userslike.create({
       postId: req.params.id,
       userId: req.body.userId
-    }).then( item => {
-
     })
-    .catch( err => {
-      res.status(500).json({ error: err });
-    });
+    .catch( err => { res.status(500).json({ error: err, message: "3" }); });
+    await Posts.findOne({ where: { id: req.params.id }})
+    .then( async oldpost => {
+      console.log(oldpost);
+        await oldpost.update(
+          {
+            likes: oldpost.likes + 1
+          },
+          {where: {id: req.params.id}}
+        )
+        .catch( err => { res.status(500).json({ error: err }); });
+      })
+    .catch( err => { res.status(500).json({ error: err }); });
+    
   }
   else if (req.body.like < 0) {
-    Usersdislike.create({
+    console.log("in if statement : user_isDisliked: ", this.user_isDisliked);
+    if (this.user_isLiked === true) {
+      await Userslike.destroy({ where: { userId: req.body.userId, postId: req.params.id }})
+      .catch( err => { res.status(500).json({ error: err }); });
+      await Posts.findOne({ where: { id: req.params.id }})
+      .then( async oldpost => {
+        console.log(oldpost);
+        await oldpost.update(
+          {
+            likes: oldpost.likes - 1
+          },
+          {where: {id: req.params.id}}
+        )
+        .catch( err => { res.status(500).json({ error: err }); });
+      })
+      .catch( err => { res.status(500).json({ error: err }); });
+    }
+    else if (this.user_isDisliked === true) {
+      res.status(401).json({ message: "You already dislikes this post !" });
+      return;
+    }
+    await Usersdislike.create({
       postId: req.params.id,
       userId: req.body.userId
-    }).then( item => {
-
     })
-    .catch( err => {
-      res.status(500).json({ error: err });
-    })
+    .catch( err => {res.status(500).json({ error: err, message: "4" }); });
+    await Posts.findOne({ where: { id: req.params.id }})
+    .then( async oldpost => {
+      console.log(oldpost);
+        await oldpost.update(
+          {
+            dislikes: oldpost.dislikes + 1
+          },
+          {where: {id: req.params.id}}
+        )
+        .catch( err => { res.status(500).json({ error: err }); });
+      })
+    .catch( err => { res.status(500).json({ error: err }); });
   }
-
-  console.log("user_isLiked ? ", user_isLiked);
-  console.log("user_isDisliked ? ", user_isDisliked);
+  res.status(200).json({ message: "Likes updated !" });
 };
 
 exports.getOne = (req, res, next) => {
