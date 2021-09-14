@@ -5,6 +5,7 @@ const db = require('./models/');
 // ROUTES
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
+const commentsRoutes = require('./routes/comments');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 
 app.use('/api/posts', postsRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/comments', commentsRoutes);
 
 app.use((req, res, next) => {
   res.status(200);

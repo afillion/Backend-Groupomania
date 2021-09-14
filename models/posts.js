@@ -2,6 +2,7 @@ module.exports = (sequelize, Sequelize) => {
   const Posts = sequelize.define("posts", {
     title: {
       type: Sequelize.STRING(30),
+      allowNull: false
     },
     txt: {
       type: Sequelize.TEXT

@@ -2,10 +2,12 @@ module.exports = (sequelize, Sequelize) => {
   const Users = sequelize.define("users", {
     pseudo: {
       type: Sequelize.STRING(10),
-      unique: true
+      unique: true,
+      allowNull: false
     },
     pwd: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: false
     },
     role: {
       type: Sequelize.ENUM('admin', 'moderator', 'simple')

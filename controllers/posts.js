@@ -24,20 +24,25 @@ exports.new = (req, res, next) => {
 exports.modifOne = (req, res, next) => {
   Posts.findOne({ where: { id: req.params.id } })
   .then( oldpost => {
-    oldpost.update(
-      {
-        title: req.body.post.title,
-        txt: req.body.post.txt,
-        imageUrl: req.body.post.imageUrl
-      },
-      {where: {id: req.params.id}}
-    )
-    .then( () => {
-      res.status(200).json({ message : 'Post modifié' });
-    })
-    .catch( error => {
-      res.status(400).json({ error });
-    });
+    if (oldpost !== null) {
+      oldpost.update(
+        {
+          title: req.body.post.title,
+          txt: req.body.post.txt,
+          imageUrl: req.body.post.imageUrl
+        },
+        {where: {id: req.params.id}}
+      )
+      .then( () => {
+        res.status(200).json({ message : 'Post modifié' });
+      })
+      .catch( error => {
+        res.status(400).json({ error });
+      });
+    }
+    else {
+      throw "Post doesn't exists"
+    }
   })
   .catch( error => {
     res.status(404).json({ error });
@@ -62,10 +67,6 @@ exports.deleteOne = (req, res, next) => {
     res.status(404).json({ error: err });
   });
 };
-
-exports.test = function test() {
-  console.log(this);
-}
 
 exports.user_isLiked = false;
 exports.user_isDisliked = false;
@@ -184,7 +185,12 @@ exports.like = async (req, res, next) => {
 exports.getOne = (req, res, next) => {
   Posts.findOne( {where :{ id: req.params.id }})
   .then( post => {
-    res.status(200).json(post);
+    if (post !== null) {
+      res.status(200).json(post);
+    }
+    else {
+      throw "Post doesn't exists"
+    }
   })
   .catch( err => {
     res.status(404).json({ error: err });

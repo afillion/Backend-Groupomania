@@ -22,5 +22,6 @@ db.users = require("./users.js")(sequelize, Sequelize);
 db.posts = require("./posts.js")(sequelize, Sequelize);
 db.userslike = require("./usersLike.js")(sequelize, Sequelize);
 db.usersdislike = require("./usersDislike.js")(sequelize, Sequelize);
+db.comments = require("./comments.js")(sequelize, Sequelize);
 
 module.exports = db;
