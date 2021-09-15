@@ -1,4 +1,6 @@
 const db = require('../models');
+const Users = db.users;
+const Posts = db.posts;
 const Comments = db.comments;
 
 exports.new = (req, res, next) => {
@@ -79,7 +81,7 @@ exports.getOne = (req, res, next) => {
 
 exports.getAll = (req, res, next) => {
   console.log("comments getAll Ctrl");
-  Comments.findAll().then( (data) => {
+  Comments.findAll({ include: [Posts, Users] }).then( (data) => {
     res.status(200).json(data);
   }).catch( (err) => {
     res.status(500).json({err});

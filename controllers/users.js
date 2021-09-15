@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {
   const item = req.body;
-
   bcrypt.hash(req.body.pwd, 10)
   .then(hash => {
       item.pwd = hash;
@@ -23,25 +22,25 @@ exports.login = (req, res, next) => {
   Users.findOne( {where :{ email: req.body.email }})
   .then(user => {
     if (!user) {
-      return res.status(401).json({ error: 'Utilisateur non trouvé !' }); //401:NO AUTHORIZED
+      res.status(401).json({ error: 'Utilisateur non trouvé !' }); //401:NO AUTHORIZED
     }
     bcrypt.compare(req.body.pwd, user.pwd)
     .then(valid => {
       if (!valid) {
-        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+        res.status(401).json({ error: 'Mot de passe incorrect !' });
       }
-      res.status(200).json({
-        userId: user._id,
-        token: jwt.sign(
-          { userId: user._id },
-          'RANDOM_TOKEN_SECRET',
-          { expiresIn: '24h' }
-          )
+      else {
+        res.status(200).json({
+          userId: user.id,
+          token: jwt.sign(
+            { userId: user.id },
+            'RANDOM_TOKEN_SECRET',
+            { expiresIn: '24h' }
+            )
         });
+      }
       })
       .catch(error => res.status(500).json({ error: error }));
-
-      res.status(200).json({ user });
     })
     .catch(error => res.status(404).json({ error: error }));
 };

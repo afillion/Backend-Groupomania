@@ -7,10 +7,10 @@ module.exports = (sequelize, Sequelize) => {
     txt: {
       type: Sequelize.TEXT
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    },
+    // userId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false
+    // },
     // usersLiked: {
     //   type: Sequelize.STRING //NO ARRAY TYPE FOR MYSQL IN SEQUELIZE
     // },
@@ -30,6 +30,5 @@ module.exports = (sequelize, Sequelize) => {
       // } Reactivate this for build. Unable in dev mode due to localhost:3000 rejected by isUrl method
     }
   });
-
   return Posts;
 };

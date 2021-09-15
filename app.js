@@ -1,6 +1,9 @@
 // PLUGINS
 const express = require('express');
 const db = require('./models/');
+Posts = db.posts;
+Users = db.users;
+Comments = db.comments;
 
 // ROUTES
 const usersRoutes = require('./routes/users');
@@ -27,6 +30,14 @@ async function db_test() {
   };
 }
 db_test();
+
+Users.hasMany(Posts);
+Posts.belongsTo(Users);
+
+Users.hasMany(Comments);
+Posts.hasMany(Comments);
+Comments.belongsTo(Users);
+Comments.belongsTo(Posts);
 
 db.sequelize.sync({ force: true }).then(() => {
   console.log("Drop and re-sync db.");

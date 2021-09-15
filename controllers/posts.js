@@ -1,5 +1,6 @@
 const db = require('../models');
 const Posts = db.posts;
+const Users = db.users
 const Userslike = db.userslike;
 const Usersdislike = db.usersdislike;
 const jwt = require('jsonwebtoken');
@@ -199,7 +200,9 @@ exports.getOne = (req, res, next) => {
 
 exports.getAll = (req, res, next) => {
   console.log("posts getAll Ctrl");
-  Posts.findAll().then( (data) => {
+  Posts.findAll({
+    include: Users
+  }).then( async (data) => {
     res.status(200).json(data);
   }).catch( (err) => {
     res.status(500).json({err});
