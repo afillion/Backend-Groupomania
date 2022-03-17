@@ -22,19 +22,19 @@ exports.login = (req, res, next) => {
   Users.findOne( {where :{ email: req.body.email }})
   .then(user => {
     if (!user) {
-      res.status(401).json({ error: 'Utilisateur non trouvé !' }); //401:NO AUTHORIZED
+      return res.status(401).json({ error: 'Utilisateur non trouvé !' }); //401:NO AUTHORIZED
     }
     bcrypt.compare(req.body.pwd, user.pwd)
     .then(valid => {
       if (!valid) {
-        res.status(401).json({ error: 'Mot de passe incorrect !' });
+        return res.status(401).json({ error: 'Mot de passe incorrect !' });
       }
       else {
-        res.status(200).json({
+        return res.status(200).json({
           userId: user.id,
           token: jwt.sign(
             { userId: user.id },
-            'RANDOM_TOKEN_SECRET',
+            process.env.SECRET_TOKEN,
             { expiresIn: '1h' }
             )
         });

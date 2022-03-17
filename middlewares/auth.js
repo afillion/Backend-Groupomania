@@ -9,8 +9,8 @@ module.exports = (req, res, next) => {
   console.log(req.headers);
   try {
     const token = req.headers.authorization.split(' ')[1];
-    console.log(token);
-    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    console.log("TOKEN: " + token);
+    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     console.log(decodedToken);
     const userId = decodedToken.userId;
     Users.findOne( {where :{ id: userId }})

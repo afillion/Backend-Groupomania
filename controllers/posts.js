@@ -201,7 +201,7 @@ exports.getOne = (req, res, next) => {
 exports.getAll = (req, res, next) => {
   console.log("posts getAll Ctrl");
   Posts.findAll({
-    include: Users
+    include: [Users, Comments]
   }).then( async (data) => {
     res.status(200).json(data);
   }).catch( (err) => {

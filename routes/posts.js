@@ -7,7 +7,7 @@ const postsCtrl = require('../controllers/posts');
 
 router.get('', auth, postsCtrl.getAll);
 router.get('/:id',  postsCtrl.getOne);
-router.post('',  postsCtrl.new);
+router.post('', postsCtrl.new);
 router.put('/:id', postsCtrl.modifOne);
 router.delete('/:id', postsCtrl.deleteOne);
 router.post('/:id/like', postsCtrl.like);

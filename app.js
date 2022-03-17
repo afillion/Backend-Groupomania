@@ -35,13 +35,13 @@ Users.hasMany(Posts);
 Posts.belongsTo(Users);
 
 Users.hasMany(Comments);
-Posts.hasMany(Comments);
 Comments.belongsTo(Users);
+Posts.hasMany(Comments);
 Comments.belongsTo(Posts);
 
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+// });
 
 app.use('/images', express.static(path.join(__dirname, '/images')));
 // Cela indique à Express qu'il faut gérer la ressource images 
