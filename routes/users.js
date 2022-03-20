@@ -9,6 +9,7 @@ router.post('/login', usersCtrl.login);
 router.get('', usersCtrl.getAll);
 router.get('/:id', usersCtrl.getOne);
 router.post('/test', auth);
+router.delete('/:id', auth, usersCtrl.deleteOne);
 
 module.exports = router;
 // Define routes for each path. See methods in controllers/

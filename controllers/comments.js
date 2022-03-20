@@ -8,7 +8,7 @@ exports.new = (req, res, next) => {
   // console.log("req body:", req.body);
   // console.log("req title:", req.title);
   // console.log("req params:", req.params);
-  const item = req.body.comment;
+  const item = req.body;
   Comments.create(item).then( (comment) => {
     res.status(200).json( { 
       message: "Comments created !", 
@@ -81,7 +81,12 @@ exports.getOne = (req, res, next) => {
 
 exports.getAll = (req, res, next) => {
   console.log("comments getAll Ctrl");
-  Comments.findAll({ include: [Posts, Users] }).then( (data) => {
+  Comments.findAll({ 
+    include: [Posts, Users],
+    order: [
+      ['createdAt','DESC']
+    ]
+  }).then( (data) => {
     res.status(200).json(data);
   }).catch( (err) => {
     res.status(500).json({err});

@@ -18,7 +18,7 @@ exports.new = (req, res, next) => {
     likes: 0,
     dislikes: 0,
     userId: req.body.userId,
-    imageUrl: req.body.imageUrl
+    imageUrl: req.file.filename
   };
   console.log(data);
   Posts.create(data).then( (post) => {
@@ -211,7 +211,10 @@ exports.getOne = (req, res, next) => {
 exports.getAll = (req, res, next) => {
   console.log("posts getAll Ctrl");
   Posts.findAll({
-    include: [Users, Comments]
+    include: [Users, Comments],
+    order: [
+      ['createdAt','DESC']
+    ]
   }).then( async (data) => {
     res.status(200).json(data);
   }).catch( (err) => {

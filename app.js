@@ -35,10 +35,19 @@ async function db_test() {
 db_test();
 
 Users.hasMany(Posts);
-Posts.belongsTo(Users);
+Posts.belongsTo(Users, {
+  foreignKey: 'userId',
+  onDelete: 'cascade',
+  hooks: true
+});
 
 Users.hasMany(Comments);
-Comments.belongsTo(Users);
+Comments.belongsTo(Users, {
+  foreignKey: 'userId',
+  onDelete: 'cascade',
+  hooks: true
+});
+
 Posts.hasMany(Comments);
 Comments.belongsTo(Posts);
 
