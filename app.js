@@ -11,6 +11,7 @@ const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
 
 const app = express();
+const upload = require('./middlewares/multer-config');
 
 // Replace bodyParser : It's include in express now
 //  parse requests of content-type - application/x-www-form-urlencoded
@@ -20,6 +21,8 @@ app.use(express.json());
 
 // The path module provides utilities for working with file and directory paths. It can be accessed using:
 const path = require('path');
+const usersDislike = require('./models/usersDislike');
+const usersLike = require('./models/usersLike');
 
 async function db_test() {
   try {
@@ -43,7 +46,7 @@ Comments.belongsTo(Posts);
 //   console.log("Drop and re-sync db.");
 // });
 
-app.use('/images', express.static(path.join(__dirname, '/images')));
+app.use('/images', express.static(path.join(__dirname, './images')));
 // Cela indique à Express qu'il faut gérer la ressource images 
 // de manière statique (un sous-répertoire de notre répertoire de base, __dirname )
 // à chaque fois qu'elle reçoit une requête vers la route /images
@@ -58,7 +61,10 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 }); //response define header for all routes and methods(GET POST PUT DELETE..)
-
+app.post('/images', upload.single('images'), (req, res, next) => {
+  console.log(req.file);
+  console.log(req.body);
+});
 app.use('/api/posts', postsRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/comments', commentsRoutes);

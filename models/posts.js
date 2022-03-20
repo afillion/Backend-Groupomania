@@ -5,7 +5,8 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     txt: {
-      type: Sequelize.TEXT
+      type: Sequelize.TEXT,
+      allowNull: false
     },
     // userId: {
     //   type: Sequelize.INTEGER,

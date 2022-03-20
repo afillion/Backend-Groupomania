@@ -8,11 +8,20 @@ const fs = require('fs'); //for File System. Give access for file system functio
 
 exports.new = (req, res, next) => {
   console.log("posts create Ctrl");
-  // console.log("req body:", req.body);
-  // console.log("req title:", req.title);
-  // console.log("req params:", req.params);
-  const item = req.body.post;
-  Posts.create(item).then( (post) => {
+  console.log("req body:", req.body);
+  console.log("req title:", req.title);
+  console.log("req params:", req.params);
+  console.log("req file:", req.file);
+  const data = {
+    title: req.body.title,
+    txt: req.body.txt,
+    likes: 0,
+    dislikes: 0,
+    userId: req.body.userId,
+    imageUrl: req.body.imageUrl
+  };
+  console.log(data);
+  Posts.create(data).then( (post) => {
     res.status(200).json( { 
       message: "Posts created !", 
       post: post
@@ -184,7 +193,8 @@ exports.like = async (req, res, next) => {
 };
 
 exports.getOne = (req, res, next) => {
-  Posts.findOne( {where :{ id: req.params.id }})
+  console.log("post getOne Ctrl");
+  Posts.findOne( {where :{ id: req.params.id }, include: [{model: Users}, {model: Comments, include: Users}]})
   .then( post => {
     if (post !== null) {
       res.status(200).json(post);

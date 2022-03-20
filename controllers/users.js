@@ -9,7 +9,7 @@ exports.signup = (req, res, next) => {
   .then(hash => {
       item.pwd = hash;
       Users.create(item).then( data => {
-        res.status(200).json(data);
+        res.status(200).json({data});
       }).catch( err => {
         res.status(400).json({error: err, message: "CANNOT CREATE USER !"});
       } );
@@ -30,10 +30,11 @@ exports.login = (req, res, next) => {
         return res.status(401).json({ error: 'Mot de passe incorrect !' });
       }
       else {
+        console.log(user);
         return res.status(200).json({
           userId: user.id,
           token: jwt.sign(
-            { userId: user.id },
+            { userId: user.id, role: user.role, first_name: user.first_name, last_name: user.last_name },
             process.env.SECRET_TOKEN,
             { expiresIn: '1h' }
             )
