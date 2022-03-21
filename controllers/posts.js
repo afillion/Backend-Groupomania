@@ -12,13 +12,15 @@ exports.new = (req, res, next) => {
   console.log("req title:", req.title);
   console.log("req params:", req.params);
   console.log("req file:", req.file);
+  let filename;
+  req.file == undefined ? filename = '' : filename = req.file.filename;
   const data = {
     title: req.body.title,
     txt: req.body.txt,
     likes: 0,
     dislikes: 0,
     userId: req.body.userId,
-    imageUrl: req.file.filename
+    imageUrl: filename
   };
   console.log(data);
   Posts.create(data).then( (post) => {
