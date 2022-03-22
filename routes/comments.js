@@ -5,11 +5,11 @@ const auth = require('../middlewares/auth');
 const multer = require('../middlewares/multer-config');
 const commentsCtrl = require('../controllers/comments');
 
-router.get('',  commentsCtrl.getAll);
-router.get('/:id',  commentsCtrl.getOne);
-router.post('',  commentsCtrl.new);
-router.put('/:id', commentsCtrl.modifOne);
-router.delete('/:id', commentsCtrl.deleteOne);
+router.get('',  auth, commentsCtrl.getAll);
+router.get('/:id',  auth, commentsCtrl.getOne);
+router.post('',  auth, commentsCtrl.new);
+router.put('/:id', auth, commentsCtrl.modifOne);
+router.delete('/:id', auth, commentsCtrl.deleteOne);
 
 module.exports = router;
 // Define routes for each path. See methods in controllers/
