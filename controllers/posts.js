@@ -213,7 +213,7 @@ exports.getOne = (req, res, next) => {
 exports.getAll = (req, res, next) => {
   console.log("posts getAll Ctrl");
   Posts.findAll({
-    include: [Users, Comments],
+    include: [Users, Comments, Userslike, Usersdislike],
     order: [
       ['createdAt','DESC']
     ]
